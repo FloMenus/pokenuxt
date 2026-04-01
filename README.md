@@ -10,6 +10,13 @@ Application web Pokémon développée avec Nuxt, permettant de consulter, recher
 - **Équipe** — Ajout d'un Pokémon capturé à son équipe avec formulaire de personnalisation (surnom, etc.)
 - **Types** — Tableau récapitulatif des types avec leurs faiblesses et résistances
 
+## Liste des liens
+- http://localhost:3000/ -> Accueil / Pokédex
+- http://localhost:3000/pokemon/:id -> Fiche Pokémon
+- http://localhost:3000/favorites -> Favoris
+- http://localhost:3000/team -> Équipe
+- http://localhost:3000/types -> Types
+
 ## Prérequis
 
 - [Node.js](https://nodejs.org/) v18 ou supérieur

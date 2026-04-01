@@ -23,7 +23,7 @@
     <footer class="bg-gray-800 border-t border-gray-700 mt-12">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div class="text-center text-gray-400">
-          <p>&copy; 2026 PokeNuxt. Tous droits réservés.</p>
+          <p>&copy; 2026 PokeNuxt</p>
         </div>
       </div>
     </footer>
