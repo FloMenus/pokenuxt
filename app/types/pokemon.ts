@@ -18,3 +18,16 @@ export interface Pokemon {
   image: string;
   types: PokemonType[];
 }
+
+export interface GetAllPokemonOptions {
+  generation?: number[];
+  types?: PokemonType[];
+}
+
+export interface GenerationResponse {
+  pokemon_species: Array<{ name: string }>;
+}
+
+export interface TypeResponse {
+  pokemon: Array<{ pokemon: { name: string } }>;
+}
