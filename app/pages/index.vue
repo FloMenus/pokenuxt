@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { pokemonService } from "~/services/pokemon";
+import type { GetAllPokemonOptions } from "~/types/pokemon";
+import type { PokemonType } from "~/types/type";
 
 definePageMeta({
   layout: "main",
@@ -13,11 +15,13 @@ useSeoMeta({
 
 const LIMIT = 60;
 const page = ref(1);
+const showAdvanced = ref(false);
+const advancedOptions = ref<GetAllPokemonOptions>({});
 
 const { data, pending } = await useAsyncData(
   "pokemons",
-  () => pokemonService.getAll(page.value),
-  { watch: [page] },
+  () => pokemonService.getAllWithOptions(page.value, advancedOptions.value),
+  { watch: [page, advancedOptions] },
 );
 
 const pokemons = computed(() => data.value?.pokemons ?? []);
@@ -27,6 +31,18 @@ function onPageChange(p: number) {
   page.value = p;
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
+
+function onAdvancedSearch(options: { generation: number[]; types: PokemonType[] }) {
+  advancedOptions.value = options;
+  page.value = 1;
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+const hasActiveFilters = computed(
+  () =>
+    (advancedOptions.value.generation?.length ?? 0) > 0 ||
+    (advancedOptions.value.types?.length ?? 0) > 0,
+);
 </script>
 
 <template>
@@ -34,7 +50,12 @@ function onPageChange(p: number) {
     class="mt-6 max-w-4xl mx-auto flex flex-col justify-center items-center gap-2"
   >
     <SearchBar class="w-full" />
-    <UiButton color="secondary" variant="ghost">
+    <UiButton
+      color="secondary"
+      variant="ghost"
+      :class="{ 'text-primary': showAdvanced || hasActiveFilters }"
+      @click="showAdvanced = !showAdvanced"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -58,7 +79,17 @@ function onPageChange(p: number) {
         <path d="M8 12H3" />
       </svg>
       Recherche avancée
+      <span
+        v-if="hasActiveFilters"
+        class="ml-1 w-2 h-2 rounded-full bg-primary inline-block"
+      />
     </UiButton>
+
+    <AdvancedResearchMenu
+      v-if="showAdvanced"
+      class="w-full"
+      @search="onAdvancedSearch"
+    />
   </div>
 
   <div class="mt-8 max-w-7xl mx-auto">
