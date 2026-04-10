@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { PokemonType } from "~/types/type";
+import { useFavoritesStore } from "~/stores/favorites";
 
 const props = defineProps<{
   id: number;
@@ -7,6 +8,19 @@ const props = defineProps<{
   image: string;
   types: PokemonType[];
 }>();
+
+const favoritesStore = useFavoritesStore();
+
+const isFav = computed(() => favoritesStore.isFavorite(props.id));
+
+function toggleFavorite() {
+  favoritesStore.toggle({
+    id: props.id,
+    name: props.name,
+    image: props.image,
+    types: props.types,
+  });
+}
 </script>
 
 <template>
@@ -17,12 +31,13 @@ const props = defineProps<{
       #{{ String(id).padStart(3, "0") }}
     </span>
 
-    <button class="absolute top-2 right-3 transition cursor-pointer">
+    <button class="absolute top-2 right-3 transition cursor-pointer" @click="toggleFavorite">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         class="w-5 h-5"
+        :class="isFav ? 'text-red-500' : 'text-gray-300 hover:text-red-300'"
         viewBox="0 0 24 24"
-        fill="none"
+        :fill="isFav ? 'currentColor' : 'none'"
         stroke="currentColor"
         stroke-width="2"
       >
