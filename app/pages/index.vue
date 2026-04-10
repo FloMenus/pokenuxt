@@ -38,6 +38,12 @@ function onAdvancedSearch(options: { generation: number[]; types: PokemonType[] 
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
+function onSearch(name: string) {
+  advancedOptions.value = { ...advancedOptions.value, name: name || undefined };
+  page.value = 1;
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
 const hasActiveFilters = computed(
   () =>
     (advancedOptions.value.generation?.length ?? 0) > 0 ||
@@ -49,7 +55,7 @@ const hasActiveFilters = computed(
   <div
     class="mt-6 max-w-4xl mx-auto flex flex-col justify-center items-center gap-2"
   >
-    <SearchBar class="w-full" />
+    <SearchBar class="w-full" @search="onSearch" />
     <UiButton
       color="secondary"
       variant="ghost"

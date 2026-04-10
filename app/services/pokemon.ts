@@ -52,13 +52,16 @@ export const pokemonService = {
   ): Promise<{ pokemons: Pokemon[]; total: number }> {
     const generations = options.generation ?? [];
     const types = options.types ?? [];
+    const nameQuery = options.name?.trim().toLowerCase() ?? '';
 
     const hasGeneration = generations.length > 0;
     const hasTypes = types.length > 0;
+    const hasName = nameQuery.length > 0;
 
     if (
       !hasGeneration &&
-      !hasTypes
+      !hasTypes &&
+      !hasName
     ) {
       return this.getAll(page);
     }
@@ -68,6 +71,18 @@ export const pokemonService = {
     }
 
     let allowedNames: Set<string> | null = null;
+
+    /* Filter by name */
+    if (hasName) {
+      const list = await $fetch<PokemonListResponse>(BASE_URL, {
+        query: { limit: 100000, offset: 0 },
+      });
+      allowedNames = new Set(
+        list.results
+          .map((r) => r.name)
+          .filter((name) => name.startsWith(nameQuery)),
+      );
+    }
 
     /* Filter by generation */
     if (hasGeneration) {
@@ -87,7 +102,9 @@ export const pokemonService = {
         generationSet.forEach((name) => namesFromGenerations.add(name));
       });
 
-      allowedNames = namesFromGenerations;
+      allowedNames = allowedNames
+        ? new Set([...allowedNames].filter((name) => namesFromGenerations.has(name)))
+        : namesFromGenerations;
     }
 
     /* Filter by types */
