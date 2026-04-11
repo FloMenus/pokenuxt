@@ -22,11 +22,11 @@
               Favoris
             </NuxtLink>
             <NuxtLink
-              to="/team"
+              to="/teams"
               class="text-gray-500 hover:text-primary transition pb-1 border-b-2 border-transparent"
               exact-active-class="!text-primary !border-primary"
             >
-              Mon Équipe
+              Mes Équipes
             </NuxtLink>
             <NuxtLink
               to="/about"
