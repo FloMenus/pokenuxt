@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { PokemonType } from "~/types/type";
+import { useFavoritesStore } from "~/stores/favorites";
 
 const props = defineProps<{
   id: number;
@@ -7,6 +8,19 @@ const props = defineProps<{
   image: string;
   types: PokemonType[];
 }>();
+
+const favoritesStore = useFavoritesStore();
+
+const isFav = computed(() => favoritesStore.isFavorite(props.id));
+
+function toggleFavorite() {
+  favoritesStore.toggle({
+    id: props.id,
+    name: props.name,
+    image: props.image,
+    types: props.types,
+  });
+}
 </script>
 
 <template>
@@ -18,7 +32,11 @@ const props = defineProps<{
       #{{ String(id).padStart(3, "0") }}
     </span>
 
-    <UiFavoriteButton class="absolute top-2 right-3" @click.prevent />
+    <UiFavoriteButton
+      class="absolute top-2 right-3"
+      :active="isFav"
+      @click.prevent.stop="toggleFavorite"
+    />
 
     <img :src="image" :alt="name" class="w-28 h-28 object-contain mt-4" />
 
