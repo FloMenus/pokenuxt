@@ -20,6 +20,7 @@ export interface Pokemon {
 }
 
 export interface GetAllPokemonOptions {
+  name?: string;
   generation?: number[];
   types?: PokemonType[];
 }
