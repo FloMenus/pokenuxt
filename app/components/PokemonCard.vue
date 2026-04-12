@@ -32,11 +32,17 @@ function toggleFavorite() {
       #{{ String(id).padStart(3, "0") }}
     </span>
 
-    <UiFavoriteButton
-      class="absolute top-2 right-3"
-      :active="isFav"
-      @click.prevent.stop="toggleFavorite"
-    />
+    <ClientOnly>
+      <UiFavoriteButton
+        class="absolute top-2 right-3"
+        :active="isFav"
+        @click.prevent.stop="toggleFavorite"
+      />
+
+      <template #fallback>
+        <UiFavoriteButton class="absolute top-2 right-3" />
+      </template>
+    </ClientOnly>
 
     <img :src="image" :alt="name" class="w-28 h-28 object-contain mt-4" />
 
