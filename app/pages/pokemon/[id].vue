@@ -79,12 +79,17 @@ useSeoMeta({
 
     <template v-else-if="pokemon">
       <div class="bg-white rounded-2xl shadow p-6 flex flex-col gap-8 relative">
-        <UiFavoriteButton
-          size="lg"
-          class="absolute top-4 right-4"
-          :active="isFav"
-          @click="toggleFavorite"
-        />
+        <ClientOnly>
+          <UiFavoriteButton
+            size="lg"
+            class="absolute top-4 right-4"
+            :active="isFav"
+            @click="toggleFavorite"
+          />
+          <template #fallback>
+            <UiFavoriteButton size="lg" class="absolute top-4 right-4" />
+          </template>
+        </ClientOnly>
 
         <div class="flex flex-col items-center gap-3">
           <span class="text-sm font-semibold text-gray-400 self-start">
