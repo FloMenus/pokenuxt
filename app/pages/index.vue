@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { pokemonService } from "~/services/pokemon";
 import type { GetAllPokemonOptions } from "~/types/pokemon";
-import type { PokemonType } from "~/types/type";
 
 definePageMeta({
   layout: "main",
@@ -32,7 +31,7 @@ function onPageChange(p: number) {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-function onAdvancedSearch(options: { generation: number[]; types: PokemonType[] }) {
+function onAdvancedSearch(options: GetAllPokemonOptions) {
   advancedOptions.value = options;
   page.value = 1;
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -48,6 +47,14 @@ const hasActiveFilters = computed(
   () =>
     (advancedOptions.value.generation?.length ?? 0) > 0 ||
     (advancedOptions.value.types?.length ?? 0) > 0,
+);
+
+const hasNameSearch = computed(() => Boolean(advancedOptions.value.name));
+const showNoResultMessage = computed(
+  () =>
+    (hasNameSearch.value || hasActiveFilters.value) &&
+    !pending.value &&
+    pokemons.value.length === 0,
 );
 </script>
 
@@ -106,7 +113,14 @@ const hasActiveFilters = computed(
     </div>
 
     <template v-else>
-      <div class="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 gap-4">
+      <p
+        v-if="showNoResultMessage"
+        class="text-center text-gray-600 py-16"
+      >
+        Aucun Pokémon trouvé.
+      </p>
+
+      <div v-else class="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 gap-4">
         <PokemonCard
           v-for="pokemon in pokemons"
           :key="pokemon.id"
@@ -117,7 +131,7 @@ const hasActiveFilters = computed(
         />
       </div>
 
-      <div class="mt-8 pb-8">
+      <div v-if="total > 0" class="mt-8 pb-8">
         <UiPagination
           :page="page"
           :total="total"

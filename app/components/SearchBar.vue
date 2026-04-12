@@ -15,6 +15,7 @@ defineEmits<{
       type="text"
       placeholder="Rechercher un Pokémon..."
       class="flex-1 px-4 outline-none bg-transparent"
+      @keydown.enter.prevent="$emit('search', search)"
     />
     <UiButton @click="$emit('search', search)">
       <svg
