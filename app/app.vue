@@ -1,6 +1,11 @@
+<script setup lang="ts">
+useHead({
+  titleTemplate: (title) => (title ? `${title} - PokéNuxt` : "PokéNuxt"),
+});
+</script>
+
 <template>
-  <div>
-    <NuxtRouteAnnouncer />
-    <NuxtWelcome />
-  </div>
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
 </template>
