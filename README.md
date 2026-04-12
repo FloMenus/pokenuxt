@@ -25,7 +25,7 @@ La page détail d'un Pokémon regroupe toutes ses informations :
 - Ajout aux favoris
 - Ajout à une ou plusieurs équipes
 
-![Fiche Pokémon](public/screenshots/pokemon-detail.png)
+![Fiche Pokémon](public/screenshots/pokemon-detail-gengar.png)
 
 ---
 
