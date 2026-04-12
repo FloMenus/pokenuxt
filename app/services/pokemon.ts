@@ -13,6 +13,8 @@ import type {
 import type { PokemonType } from "~/types/type";
 
 const BASE_URL = "https://pokeapi.co/api/v2/pokemon";
+
+let nameListCache: string[] | null = null;
 const API_BASE_URL = "https://pokeapi.co/api/v2";
 const LIMIT = 60;
 
@@ -220,6 +222,38 @@ export const pokemonService = {
       abilities,
       description,
     };
+  },
+
+  async getNameList(): Promise<string[]> {
+    if (nameListCache) return nameListCache;
+    const list = await $fetch<PokemonListResponse>(BASE_URL, {
+      query: { limit: 2000, offset: 0 },
+    });
+    nameListCache = list.results.map((r) => r.name);
+    return nameListCache;
+  },
+
+  async getByNames(names: string[]): Promise<Pokemon[]> {
+    const results = await Promise.allSettled(
+      names.map(async (name) => {
+        const data = await $fetch<any>(`${BASE_URL}/${name}`);
+        const image =
+          data.sprites.other["official-artwork"].front_default ??
+          data.sprites.front_default;
+        if (!image) throw new Error("no image");
+        return {
+          id: data.id,
+          name: data.name,
+          image,
+          types: data.types.map((t: any) => t.type.name) as PokemonType[],
+        } satisfies Pokemon;
+      }),
+    );
+    return results
+      .filter(
+        (r): r is PromiseFulfilledResult<Pokemon> => r.status === "fulfilled",
+      )
+      .map((r) => r.value);
   },
 
   async getForms(id: number | string): Promise<PokemonForm[]> {

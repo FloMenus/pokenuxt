@@ -91,6 +91,14 @@ useSeoMeta({
         />
         <PokemonStats :stats="pokemon.stats" />
         <PokemonAbilities :abilities="pokemon.abilities" />
+        <AddToTeam
+          :pokemon="{
+            id: pokemon.id,
+            name: pokemon.name,
+            image: pokemon.image,
+            types: pokemon.types,
+          }"
+        />
         <PokemonForms v-if="forms && forms.length > 0" :forms="forms" />
 
         <div v-if="evolutionPending" class="flex justify-center py-4">
