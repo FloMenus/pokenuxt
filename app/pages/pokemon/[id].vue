@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { pokemonService } from "~/services/pokemon";
+import { useFavoritesStore } from "~/stores/favorites";
 
 definePageMeta({
   layout: "main",
@@ -22,6 +23,22 @@ const { data: forms } = useAsyncData(
   () => pokemonService.getForms(id),
   { default: () => [] as any },
 );
+
+const favoritesStore = useFavoritesStore();
+const isFav = computed(() =>
+  pokemon.value ? favoritesStore.isFavorite(pokemon.value.id) : false,
+);
+
+function toggleFavorite() {
+  if (!pokemon.value) return;
+
+  favoritesStore.toggle({
+    id: pokemon.value.id,
+    name: pokemon.value.name,
+    image: pokemon.value.image,
+    types: pokemon.value.types,
+  });
+}
 
 useSeoMeta({
   title: computed(() =>
@@ -62,7 +79,12 @@ useSeoMeta({
 
     <template v-else-if="pokemon">
       <div class="bg-white rounded-2xl shadow p-6 flex flex-col gap-8 relative">
-        <UiFavoriteButton size="lg" class="absolute top-4 right-4" />
+        <UiFavoriteButton
+          size="lg"
+          class="absolute top-4 right-4"
+          :active="isFav"
+          @click="toggleFavorite"
+        />
 
         <div class="flex flex-col items-center gap-3">
           <span class="text-sm font-semibold text-gray-400 self-start">
